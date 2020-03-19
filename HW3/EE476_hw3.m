@@ -28,14 +28,14 @@ initial = table(...
 % x, dx/dt, y, dy/dt, z, dz/dt
 ss_initial = [-1.12,-211.48,-3.10,129.12,-3.40,-48.23];
 % time (Myrs)
-t_span = [0 90];
+t = linspace(t_span(1), t_span(end), 5000);
 % For debugging: planet ID
 id = 5;
 
 % **********
 % * Solve space ship motion
 % **********
-[ss_t, ss_sol] = ode23(@(t, x) ssmodel(x), t_span, ss_initial);
+[ss_t, ss_sol] = ode23(@(t, x) ssmodel(x), t, ss_initial);
 ss_x = ss_sol(:, 1);
 ss_y = ss_sol(:, 3);
 ss_z = ss_sol(:, 5);
@@ -46,7 +46,6 @@ ss_z = ss_sol(:, 5);
 % **********
 % n, defined in instructions
 n = orbit_speed(data.R)./data.R;
-t = linspace(t_span(1), t_span(end), 500);
 
 x = (data.R) .* (cos(n.*t + data.phi) .* cos(data.Omega) - ...
     sin(n.*t + data.phi) .* cos(data.i) .* sin(data.Omega));
@@ -70,10 +69,8 @@ xlim([-40 40])
 ylim([-40 40])
 hold on
 
-dt = t(2) - t(1);
-ss_dt = ss_t(end)/length(ss_t);
 % F(100) = struct('cdata',[],'colormap',[]);
-num_stars = length(n);
+num_stars = length(n); % Set the number of stars to plot
 for i = 1:100
     if i == 1
         ax_star = plot3(x(1:num_stars, i), y(1:num_stars, i), ...
@@ -106,8 +103,6 @@ for i = 1:100
 %     F(i) = getframe(gcf);
 end
 
-% not sure what to do here, just trying something
-% sol = ode45(@(t,x) ssmodel(x), tspan, initial{1,:});
 
  
  % defined in instructions
